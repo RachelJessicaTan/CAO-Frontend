@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'LoginPage.dart';
+import 'SignUpPage.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -63,12 +64,12 @@ class LoadPage extends StatelessWidget {
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const SignUpPage(),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpPage(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: darkButtonColor,
