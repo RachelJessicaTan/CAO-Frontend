@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _currentNavIndex = 0;
+  
+  int _selectedCategoryIndex = -1;
+
+  final List<Map<String, String>> categories = [
+    {'image': 'lib/assets/food.png', 'label': 'Food'},
+    {'image': 'lib/assets/hotel.png', 'label': 'Hotel'},
+    {'image': 'lib/assets/cafe.png', 'label': 'Cafe'},
+    {'image': 'lib/assets/forest.png', 'label': 'Nature'},
+    {'image': 'lib/assets/bar.png', 'label': 'Bar'},
+    {'image': 'lib/assets/holiday.png', 'label': 'Holiday'},
+  ];
 
   @override
   Widget build(BuildContext context) {
     const Color brandYellow = Color(0xFFFCDD3F);
-    const Color darkColor = Color(0xFF1A1A1A);
-
-    final List<Map<String, String>> categories = [
-      {'image': 'lib/assets/food.png', 'label': 'Food'},
-      {'image': 'lib/assets/hotel.png', 'label': 'Hotel'},
-      {'image': 'lib/assets/cafe.png', 'label': 'Cafe'},
-      {'image': 'lib/assets/forest.png', 'label': 'Nature'},
-      {'image': 'lib/assets/bar.png', 'label': 'Bar'},
-      {'image': 'lib/assets/holiday.png', 'label': 'Holiday'},
-    ];
 
     return Scaffold(
-      backgroundColor: brandYellow, // Background utama kuning agar saat scroll tidak ada celah
+      backgroundColor: brandYellow, 
       body: Stack(
         children: [
           Column(
@@ -35,7 +43,6 @@ class HomePage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Logo pakai cao_logo.png
                         Image.asset(
                           'lib/assets/cao_logo.png',
                           height: 30,
@@ -65,16 +72,20 @@ class HomePage extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       clipBehavior: Clip.none,
                       child: Row(
-                        children: categories.map((cat) {
-                          return _buildCategory(cat['image']!, cat['label']!);
-                        }).toList(),
+                        children: List.generate(categories.length, (index) {
+                          return _buildAnimatedCategory(
+                            index: index,
+                            imagePath: categories[index]['image']!,
+                            label: categories[index]['label']!,
+                          );
+                        }),
                       ),
                     ),
                   ],
                 ),
               ),
               
-              // putih (melengkung ke atas)
+              // putih
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -113,7 +124,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           
-          // navbar
+          // navbar dengan Animasi
           Positioned(
             bottom: 30,
             left: 32,
@@ -134,19 +145,11 @@ class HomePage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // Icon Home dengan buletan hitam di belakang
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: const BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(PhosphorIconsRegular.house, color: brandYellow, size: 26),
-                  ),
-                  const Icon(PhosphorIconsRegular.magnifyingGlass, color: Colors.black, size: 28),
-                  const Icon(PhosphorIconsRegular.plus, color: Colors.black, size: 28),
-                  const Icon(PhosphorIconsRegular.bell, color: Colors.black, size: 28),
-                  const Icon(PhosphorIconsRegular.bookmarkSimple, color: Colors.black, size: 28),
+                  _buildAnimatedNavIndex(0, PhosphorIconsRegular.house),
+                  _buildAnimatedNavIndex(1, PhosphorIconsRegular.magnifyingGlass),
+                  _buildAnimatedNavIndex(2, PhosphorIconsRegular.plus),
+                  _buildAnimatedNavIndex(3, PhosphorIconsRegular.bell),
+                  _buildAnimatedNavIndex(4, PhosphorIconsRegular.bookmarkSimple),
                 ],
               ),
             ),
@@ -156,29 +159,80 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCategory(String imagePath, String label) {
-    return Container(
-      margin: const EdgeInsets.only(right: 16),
-      width: 70,
-      child: Column(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            padding: const EdgeInsets.all(14),
-            decoration: const BoxDecoration(
-              color: Colors.black,
-              shape: BoxShape.circle,
-            ),
-            child: Image.asset(imagePath, fit: BoxFit.contain),
+  // Helper Animasi Ketukan untuk Kategori Atas
+  Widget _buildAnimatedCategory({required int index, required String imagePath, required String label}) {
+    final bool isSelected = _selectedCategoryIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedCategoryIndex = isSelected ? -1 : index;
+        });
+      },
+      child: AnimatedScale(
+        scale: isSelected ? 0.92 : 1.0,
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOutCubic,
+        child: Container(
+          margin: const EdgeInsets.only(right: 16),
+          width: 70,
+          child: Column(
+            children: [
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                width: 56,
+                height: 56,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  shape: BoxShape.circle,
+                  border: isSelected ? Border.all(color: Colors.white, width: 3) : null,
+                ),
+                child: Image.asset(imagePath, fit: BoxFit.contain),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12, 
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                  color: Colors.black
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnimatedNavIndex(int index, IconData icon) {
+    final bool isActive = _currentNavIndex == index;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _currentNavIndex = index;
+        });
+      },
+      child: AnimatedScale(
+        scale: isActive ? 0.95 : 1.0,
+        duration: const Duration(milliseconds: 100),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOutCubic,
+          padding: EdgeInsets.all(isActive ? 12 : 8),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.black : Colors.transparent,
+            shape: BoxShape.circle,
           ),
-        ],
+          child: Icon(
+            icon, 
+            color: isActive ? const Color(0xFFFCDD3F) : Colors.black, 
+            size: isActive ? 26 : 28
+          ),
+        ),
       ),
     );
   }
