@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/HomePage.dart';
 
 import 'package:frontend/pages/LoadPage.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const LoadPage(),
+      home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }

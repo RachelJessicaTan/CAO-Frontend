@@ -61,6 +61,12 @@ flutter:
 
   assets:
     - lib/assets/cao_logo.png
+    - lib/assets/food.png
+    - lib/assets/forest.png
+    - lib/assets/bar.png
+    - lib/assets/hotel.png
+    - lib/assets/cafe.png
+    - lib/assets/holiday.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
