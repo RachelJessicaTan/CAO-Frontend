@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
 import 'package:frontend/pages/PlaceDetailPage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class SearchPage extends StatefulWidget {
+  const SearchPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  int _currentNavIndex = 0;
-  int _selectedCategoryIndex = -1;
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _searchController = TextEditingController();
+  int _currentNavIndex = 1;
 
-  final List<Map<String, String>> categories = [
-    {'image': 'lib/assets/food.png', 'label': 'Food'},
-    {'image': 'lib/assets/hotel.png', 'label': 'Hotel'},
-    {'image': 'lib/assets/cafe.png', 'label': 'Cafe'},
-    {'image': 'lib/assets/forest.png', 'label': 'Nature'},
-    {'image': 'lib/assets/bar.png', 'label': 'Bar'},
-    {'image': 'lib/assets/holiday.png', 'label': 'Holiday'},
-  ];
-
-  final List<Map<String, String>> spots = [
+  final List<Map<String, String>> trendingSpots = [
     {
       'title': 'The Post',
       'loc': 'Cipete, Jakarta Selatan',
@@ -38,21 +28,33 @@ class _HomePageState extends State<HomePage> {
       'count': '842',
       'img': 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1000&auto=format&fit=crop',
     },
+    {
+      'title': 'Fogo de Chão',
+      'loc': 'SCBD, Jakarta Selatan',
+      'count': '391',
+      'img': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1000&auto=format&fit=crop',
+    },
   ];
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     const Color brandYellow = Color(0xFFFCDD3F);
 
     return Scaffold(
-      backgroundColor: brandYellow,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           Column(
             children: [
               Container(
                 width: double.infinity,
-                color: brandYellow,
+                color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(32, 60, 32, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,48 +70,41 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 32),
-                    const Text(
-                      'Find a\nplace to go?',
-                      style: TextStyle(fontSize: 42, fontWeight: FontWeight.w800, height: 1.1),
-                    ),
-                    const SizedBox(height: 32),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      clipBehavior: Clip.none,
-                      child: Row(
-                        children: List.generate(categories.length, (index) {
-                          return _buildAnimatedCategory(
-                            index: index,
-                            imagePath: categories[index]['image']!,
-                            label: categories[index]['label']!,
-                          );
-                        }),
+                    const SizedBox(height: 24),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          hintText: 'Search places...',
+                          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
+                          prefixIcon: Icon(PhosphorIconsRegular.magnifyingGlass, color: Colors.grey.shade400, size: 20),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        ),
+                        onChanged: (val) => setState(() {}),
                       ),
                     ),
                   ],
                 ),
               ),
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
-                  ),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(32, 32, 32, 120),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Hype spots', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 24),
-                        ...spots.map((spot) => Padding(
-                          padding: const EdgeInsets.only(bottom: 24),
-                          child: _buildSpotCard(spot),
-                        )),
-                      ],
-                    ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.fromLTRB(32, 24, 32, 120),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Trending', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 16),
+                      ...trendingSpots.map((spot) => Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: _buildSpotCard(spot),
+                      )),
+                    ],
                   ),
                 ),
               ),
@@ -131,11 +126,11 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildAnimatedNavIndex(0, PhosphorIconsRegular.house),
-                  _buildAnimatedNavIndex(1, PhosphorIconsRegular.magnifyingGlass),
-                  _buildAnimatedNavIndex(2, PhosphorIconsRegular.plus),
-                  _buildAnimatedNavIndex(3, PhosphorIconsRegular.bell),
-                  _buildAnimatedNavIndex(4, PhosphorIconsRegular.bookmarkSimple),
+                  _buildNavItem(0, PhosphorIconsRegular.house),
+                  _buildNavItem(1, PhosphorIconsRegular.magnifyingGlass),
+                  _buildNavItem(2, PhosphorIconsRegular.plus),
+                  _buildNavItem(3, PhosphorIconsRegular.bell),
+                  _buildNavItem(4, PhosphorIconsRegular.bookmarkSimple),
                 ],
               ),
             ),
@@ -145,62 +140,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAnimatedCategory({required int index, required String imagePath, required String label}) {
-    final bool isSelected = _selectedCategoryIndex == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedCategoryIndex = isSelected ? -1 : index),
-      child: AnimatedScale(
-        scale: isSelected ? 0.92 : 1.0,
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeOutCubic,
-        child: Container(
-          margin: const EdgeInsets.only(right: 16),
-          width: 70,
-          child: Column(
-            children: [
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                width: 56,
-                height: 56,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  shape: BoxShape.circle,
-                  border: isSelected ? Border.all(color: Colors.white, width: 3) : null,
-                ),
-                child: Image.asset(imagePath, fit: BoxFit.contain),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                  color: Colors.black,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedNavIndex(int index, IconData icon) {
+  Widget _buildNavItem(int index, IconData icon) {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
-        if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage()));
+        if (index == 0) {
+          Navigator.popUntil(context, (route) => route.isFirst);
           return;
         }
         if (index == 2) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPlacePage()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AddPlacePage()));
           return;
         }
         if (index == 4) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()));
           return;
         }
         setState(() => _currentNavIndex = index);
@@ -239,7 +192,7 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+            BoxShadow(color: Colors.black.withOpacity(0.07), blurRadius: 12, offset: const Offset(0, 4)),
           ],
         ),
         child: Column(
@@ -247,7 +200,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-              child: Image.network(spot['img']!, height: 200, width: double.infinity, fit: BoxFit.cover),
+              child: Image.network(spot['img']!, height: 180, width: double.infinity, fit: BoxFit.cover),
             ),
             Padding(
               padding: const EdgeInsets.all(20),
@@ -257,15 +210,15 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(spot['title']!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(spot['title']!, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 4),
-                      Text(spot['loc']!, style: TextStyle(color: Colors.grey.shade600, fontSize: 14)),
+                      Text(spot['loc']!, style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(PhosphorIconsRegular.chatCircle, size: 16),
+                          const Icon(PhosphorIconsRegular.chatCircle, size: 15),
                           const SizedBox(width: 4),
-                          Text(spot['count']!, style: const TextStyle(fontSize: 14)),
+                          Text(spot['count']!, style: const TextStyle(fontSize: 13)),
                         ],
                       ),
                     ],
