@@ -1,10 +1,98 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class PlaceDetailPage extends StatelessWidget {
+class PlaceDetailPage extends StatefulWidget {
   final Map<String, String> spot;
 
   const PlaceDetailPage({super.key, required this.spot});
+  
+  @override
+  State<StatefulWidget> createState() => _PlaceDetailPageState();
+}
+
+class _PlaceDetailPageState extends State<PlaceDetailPage> {
+  void _showReviewDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.white,
+          title: const Text('Posting Review', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+          content: SizedBox(
+            width: 800,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('${widget.spot['title']}', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                const Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 14,
+                      backgroundColor: Colors.black,
+                      child: Icon(PhosphorIconsRegular.user, color: Colors.white, size: 14),
+                    ),
+                    SizedBox(width: 6),
+                    Text(
+                      'Rachelle',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 16),
+                const Text('Leave a review for this place:', style: TextStyle(fontSize: 14)),
+                const SizedBox(height: 4),
+                TextField(
+                  minLines: 4,
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                    hintText: 'Share your experience!',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.black, width: 2),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text('Review has been posted', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                    backgroundColor: Colors.black.withOpacity(0.9),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    margin: const EdgeInsets.fromLTRB(24, 0, 24, 40),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                elevation: 0,
+              ),
+              child: const Text('Post', style: TextStyle(color: Color(0xFFFCDD3F), fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +136,7 @@ class PlaceDetailPage extends StatelessWidget {
               // Area Gambar Hero yang akan menyusut halus saat di-scroll
               flexibleSpace: FlexibleSpaceBar(
                 background: Image.network(
-                  spot['img']!,
+                  widget.spot['img']!,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -75,12 +163,12 @@ class PlaceDetailPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            spot['title']!,
+                            widget.spot['title']!,
                             style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            spot['loc']!,
+                            widget.spot['loc']!,
                             style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
                           ),
                         ],
@@ -142,7 +230,7 @@ class PlaceDetailPage extends StatelessWidget {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        spot['loc']!,
+                        widget.spot['loc']!,
                         style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.5),
                       ),
                     ),
@@ -160,6 +248,19 @@ class PlaceDetailPage extends StatelessWidget {
                 _buildReview('oliver', 'Best service!'),
                 _buildReview('gianazM', 'Cozy VIP room for meetings or family dinner.'),
                 _buildReview('croycloy', 'Amazing ambience and great food selection.'),
+
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _showReviewDialog, 
+                  label: const Text('Leave a review!', style: TextStyle(color: brandYellow, fontWeight: FontWeight.w600)),
+                  icon: Icon(Icons.reviews, color: brandYellow, size: 20),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: EdgeInsets.all(20),
+                    minimumSize: const Size(200, 60),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+                  )
+                )
               ],
             ),
           ),
