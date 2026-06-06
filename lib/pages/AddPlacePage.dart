@@ -187,22 +187,6 @@ class _AddPlacePageState extends State<AddPlacePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        _buildLabel('Your Review *'),
-                        const SizedBox(height: 8),
-                        Container(
-                          decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(14)),
-                          child: TextField(
-                            controller: _reviewController,
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              hintText: 'Initiate review',
-                              hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(16),
-                            ),
-                          ),
-                        ),
                         const SizedBox(height: 28),
                         SizedBox(
                           width: double.infinity,
