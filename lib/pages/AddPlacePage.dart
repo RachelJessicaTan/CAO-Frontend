@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:frontend/pages/HomePage.dart'; 
+import 'package:frontend/pages/NotificationPage.dart'; 
 import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
 
@@ -17,7 +19,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
 
   int _selectedCategoryIndex = -1;
   String? _selectedSuitableFor;
-  int _currentNavIndex = 2;
+  final int _currentNavIndex = 2;
 
   final List<Map<String, dynamic>> categories = [
     {'icon': PhosphorIconsRegular.forkKnife, 'label': 'Food'},
@@ -243,19 +245,17 @@ class _AddPlacePageState extends State<AddPlacePage> {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
-        if (index == 0) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-          return;
+        if (icon == PhosphorIconsRegular.plus) return;
+
+        if (icon == PhosphorIconsRegular.house) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.magnifyingGlass) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SearchPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bell) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
         }
-        if (index == 1) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SearchPage()));
-          return;
-        }
-        if (index == 4) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()));
-          return;
-        }
-        setState(() => _currentNavIndex = index);
       },
       child: AnimatedScale(
         scale: isActive ? 0.95 : 1.0,

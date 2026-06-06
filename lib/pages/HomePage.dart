@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/NotificationPage.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentNavIndex = 0;
+  final int _currentNavIndex = 0; 
   int _selectedCategoryIndex = -1;
 
   final List<Map<String, String>> categories = [
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Column(
             children: [
+              // Kuning atas
               Container(
                 width: double.infinity,
                 color: brandYellow,
@@ -90,6 +92,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
+              
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -115,6 +118,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ],
           ),
+          
           Positioned(
             bottom: 30,
             left: 32,
@@ -131,11 +135,11 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildAnimatedNavIndex(0, PhosphorIconsRegular.house),
-                  _buildAnimatedNavIndex(1, PhosphorIconsRegular.magnifyingGlass),
-                  _buildAnimatedNavIndex(2, PhosphorIconsRegular.plus),
-                  _buildAnimatedNavIndex(3, PhosphorIconsRegular.bell),
-                  _buildAnimatedNavIndex(4, PhosphorIconsRegular.bookmarkSimple),
+                  _buildAnimatedNavIndex(context, 0, PhosphorIconsRegular.house),
+                  _buildAnimatedNavIndex(context, 1, PhosphorIconsRegular.magnifyingGlass),
+                  _buildAnimatedNavIndex(context, 2, PhosphorIconsRegular.plus),
+                  _buildAnimatedNavIndex(context, 3, PhosphorIconsRegular.bell), 
+                  _buildAnimatedNavIndex(context, 4, PhosphorIconsRegular.bookmarkSimple),
                 ],
               ),
             ),
@@ -187,23 +191,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildAnimatedNavIndex(int index, IconData icon) {
+  Widget _buildAnimatedNavIndex(BuildContext context, int index, IconData icon) {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
-        if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchPage()));
-          return;
+        if (icon == PhosphorIconsRegular.house) return; 
+        
+        if (icon == PhosphorIconsRegular.magnifyingGlass) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SearchPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.plus) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AddPlacePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bell) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
         }
-        if (index == 2) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPlacePage()));
-          return;
-        }
-        if (index == 4) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()));
-          return;
-        }
-        setState(() => _currentNavIndex = index);
       },
       child: AnimatedScale(
         scale: isActive ? 0.95 : 1.0,

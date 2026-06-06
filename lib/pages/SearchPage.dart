@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:frontend/pages/HomePage.dart';
+import 'package:frontend/pages/NotificationPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
 import 'package:frontend/pages/PlaceDetailPage.dart';
@@ -13,7 +15,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  int _currentNavIndex = 1;
+  final int _currentNavIndex = 1;
 
   final List<Map<String, String>> trendingSpots = [
     {
@@ -140,23 +142,22 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  // FIX SINKRONISASI: Menggunakan pembersihan stack agar navigasi bolak-balik lancar
   Widget _buildNavItem(int index, IconData icon) {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
-        if (index == 0) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-          return;
+        if (icon == PhosphorIconsRegular.magnifyingGlass) return;
+
+        if (icon == PhosphorIconsRegular.house) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.plus) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AddPlacePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bell) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
         }
-        if (index == 2) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AddPlacePage()));
-          return;
-        }
-        if (index == 4) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()));
-          return;
-        }
-        setState(() => _currentNavIndex = index);
       },
       child: AnimatedScale(
         scale: isActive ? 0.95 : 1.0,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:frontend/pages/HomePage.dart';
+import 'package:frontend/pages/NotificationPage.dart';
 import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/FolderDetailPage.dart';
@@ -12,7 +14,7 @@ class SavedPlacesPage extends StatefulWidget {
 }
 
 class _SavedPlacesPageState extends State<SavedPlacesPage> {
-  int _currentNavIndex = 4;
+  final int _currentNavIndex = 4;
 
   final List<Map<String, dynamic>> savedFolders = [
     {
@@ -234,19 +236,17 @@ class _SavedPlacesPageState extends State<SavedPlacesPage> {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
-        if (index == 0) {
-          Navigator.popUntil(context, (route) => route.isFirst);
-          return;
+        if (icon == PhosphorIconsRegular.bookmarkSimple) return;
+
+        if (icon == PhosphorIconsRegular.house) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.magnifyingGlass) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SearchPage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.plus) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AddPlacePage()), (route) => false);
+        } else if (icon == PhosphorIconsRegular.bell) {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
         }
-        if (index == 1) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const SearchPage()));
-          return;
-        }
-        if (index == 2) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AddPlacePage()));
-          return;
-        }
-        setState(() => _currentNavIndex = index);
       },
       child: AnimatedScale(
         scale: isActive ? 0.95 : 1.0,

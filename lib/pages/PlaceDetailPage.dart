@@ -43,7 +43,6 @@ class PlaceDetailPage extends StatelessWidget {
               ],
             ),
 
-            // White content with rounded top corners
             Transform.translate(
               offset: const Offset(0, -32),
               child: Container(
@@ -111,7 +110,6 @@ class PlaceDetailPage extends StatelessWidget {
                     const Divider(color: Color(0xFFEEEEEE)),
                     const SizedBox(height: 16),
 
-                    // Hours
                     Row(
                       children: [
                         Icon(PhosphorIconsRegular.clock, size: 18, color: Colors.grey.shade500),
@@ -123,7 +121,6 @@ class PlaceDetailPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    // Address
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -139,7 +136,6 @@ class PlaceDetailPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    // Top Reviews
                     const Text(
                       'Top Reviews',
                       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

@@ -9,7 +9,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // State untuk mengontrol hide/show password
   bool _obscurePassword = true;
 
   @override
