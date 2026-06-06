@@ -5,6 +5,7 @@ import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
 import 'package:frontend/pages/PlaceDetailPage.dart';
+import 'package:frontend/pages/ProfilePage.dart'; // IMPORT PROFILE PAGE DI SINI
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -88,10 +89,19 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset('lib/assets/cao_logo.png', height: 30, fit: BoxFit.contain),
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                          child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                        // MODIFIKASI DI SINI: Membungkus ikon user dengan GestureDetector untuk ke ProfilePage
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              _createSmoothRoute(const ProfilePage()),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
+                            child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                          ),
                         ),
                       ],
                     ),
@@ -256,7 +266,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSpotCard(Map<String, String> spot) {
     return GestureDetector(
       onTap: () {
-        // SAMAKAN PERSIS: Masuk ke halaman detail sekarang menggunakan rute transisi mulus yang sama
         Navigator.push(
           context,
           _createSmoothRoute(PlaceDetailPage(spot: spot)),

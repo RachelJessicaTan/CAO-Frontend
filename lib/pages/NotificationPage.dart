@@ -4,6 +4,7 @@ import 'package:frontend/pages/HomePage.dart';
 import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
+import 'package:frontend/pages/ProfilePage.dart'; // IMPORT PROFILE PAGE
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -86,13 +87,19 @@ class _NotificationPageState extends State<NotificationPage> {
                       height: 30,
                       fit: BoxFit.contain,
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.circle,
+                    // DIUBAH: Dibungkus GestureDetector agar bisa ditekan dan pergi ke ProfilePage
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, _createSmoothRoute(const ProfilePage()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
                       ),
-                      child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
                     ),
                   ],
                 ),
@@ -229,7 +236,6 @@ class _NotificationPageState extends State<NotificationPage> {
       onTap: () {
         if (icon == PhosphorIconsRegular.bell) return;
 
-        // MODIFIKASI: Membungkus semua routing halaman dengan _createSmoothRoute agar transisi seragam
         if (icon == PhosphorIconsRegular.house) {
           Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const HomePage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.magnifyingGlass) {

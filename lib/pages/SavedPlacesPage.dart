@@ -5,6 +5,7 @@ import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/NotificationPage.dart';
 import 'package:frontend/pages/HomePage.dart';
 import 'package:frontend/pages/FolderDetailPage.dart';
+import 'package:frontend/pages/ProfilePage.dart';
 
 class SavedPlacesPage extends StatefulWidget {
   const SavedPlacesPage({super.key});
@@ -117,10 +118,18 @@ class _SavedPlacesPageState extends State<SavedPlacesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Image.asset('lib/assets/cao_logo.png', height: 30, fit: BoxFit.contain),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                      child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, _createSmoothRoute(const ProfilePage()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                      ),
                     ),
                   ],
                 ),

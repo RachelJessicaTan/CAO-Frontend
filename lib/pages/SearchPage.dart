@@ -5,6 +5,7 @@ import 'package:frontend/pages/NotificationPage.dart';
 import 'package:frontend/pages/AddPlacePage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
 import 'package:frontend/pages/PlaceDetailPage.dart';
+import 'package:frontend/pages/ProfilePage.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -90,10 +91,18 @@ class _SearchPageState extends State<SearchPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Image.asset('lib/assets/cao_logo.png', height: 30, fit: BoxFit.contain),
-                        Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                          child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, _createSmoothRoute(const ProfilePage()));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
+                              color: Colors.black,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                          ),
                         ),
                       ],
                     ),

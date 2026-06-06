@@ -4,6 +4,7 @@ import 'package:frontend/pages/HomePage.dart';
 import 'package:frontend/pages/NotificationPage.dart'; 
 import 'package:frontend/pages/SearchPage.dart';
 import 'package:frontend/pages/SavedPlacesPage.dart';
+import 'package:frontend/pages/ProfilePage.dart';
 
 class AddPlacePage extends StatefulWidget {
   const AddPlacePage({super.key});
@@ -87,10 +88,18 @@ class _AddPlacePageState extends State<AddPlacePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Image.asset('lib/assets/cao_logo.png', height: 30, fit: BoxFit.contain),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
-                      child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, _createSmoothRoute(const ProfilePage()));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.black,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(PhosphorIconsRegular.user, color: Colors.white, size: 24),
+                      ),
                     ),
                   ],
                 ),
