@@ -19,7 +19,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
 
   int _selectedCategoryIndex = -1;
   String? _selectedSuitableFor;
-  final int _currentNavIndex = 2;
+  final int _currentNavIndex = 2; // Index untuk Add Place
 
   final List<Map<String, dynamic>> categories = [
     {'icon': PhosphorIconsRegular.forkKnife, 'label': 'Food'},
@@ -42,6 +42,33 @@ class _AddPlacePageState extends State<AddPlacePage> {
     super.dispose();
   }
 
+  // KUNCI MULUS: Fungsi pembuat transisi kustom (Fade & Slide halus)
+  // REVISI FIX: Fungsi pembuat transisi kustom (Fade & Slide halus)
+  Route _createSmoothRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        
+        // Membuat transisi gabungan (Slide + Curve) yang benar
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.02), // Geser sedikit dari bawah ke atas
+              end: Offset.zero,
+            ).animate(curvedAnimation), // Menggunakan curvedAnimation di sini
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     const Color brandYellow = Color(0xFFFCDD3F);
@@ -241,6 +268,7 @@ class _AddPlacePageState extends State<AddPlacePage> {
     );
   }
 
+  // MODIFIKASI NAVIGASI: Menggunakan _createSmoothRoute agar transisi meluncur mulus
   Widget _buildNavItem(int index, IconData icon) {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
@@ -248,13 +276,13 @@ class _AddPlacePageState extends State<AddPlacePage> {
         if (icon == PhosphorIconsRegular.plus) return;
 
         if (icon == PhosphorIconsRegular.house) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const HomePage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.magnifyingGlass) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SearchPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const SearchPage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bell) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const NotificationPage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const SavedPlacesPage()), (route) => false);
         }
       },
       child: AnimatedScale(

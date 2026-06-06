@@ -38,6 +38,31 @@ class _SearchPageState extends State<SearchPage> {
     },
   ];
 
+  // KUNCI MULUS: Fungsi pembuat transisi kustom (Fade & Slide halus) disamakan dengan halaman lain
+  Route _createSmoothRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.02), // Geser tipis dari bawah ke atas
+              end: Offset.zero,
+            ).animate(curvedAnimation),
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+    );
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -142,21 +167,21 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  // FIX SINKRONISASI: Menggunakan pembersihan stack agar navigasi bolak-balik lancar
   Widget _buildNavItem(int index, IconData icon) {
     final bool isActive = _currentNavIndex == index;
     return GestureDetector(
       onTap: () {
         if (icon == PhosphorIconsRegular.magnifyingGlass) return;
 
+        // MODIFIKASI: Membungkus semua routing halaman dengan _createSmoothRoute agar transisi seragam
         if (icon == PhosphorIconsRegular.house) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const HomePage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const HomePage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.plus) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AddPlacePage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const AddPlacePage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bell) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const NotificationPage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const SavedPlacesPage()), (route) => false);
         }
       },
       child: AnimatedScale(
@@ -183,9 +208,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildSpotCard(Map<String, String> spot) {
     return GestureDetector(
       onTap: () {
+        // MODIFIKASI: Menggunakan kustomisasi _createSmoothRoute saat masuk ke halaman detail
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlaceDetailPage(spot: spot)),
+          _createSmoothRoute(PlaceDetailPage(spot: spot)),
         );
       },
       child: Container(

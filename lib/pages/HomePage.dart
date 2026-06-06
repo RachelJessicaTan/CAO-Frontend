@@ -41,6 +41,31 @@ class _HomePageState extends State<HomePage> {
     },
   ];
 
+  // Fungsi transisi kustom (Disamakan persis dengan AddPlacePage)
+  Route _createSmoothRoute(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        final curvedAnimation = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        );
+
+        return FadeTransition(
+          opacity: animation,
+          child: SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.0, 0.02), // Geser tipis dari bawah ke atas
+              end: Offset.zero,
+            ).animate(curvedAnimation),
+            child: child,
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const Color brandYellow = Color(0xFFFCDD3F);
@@ -198,13 +223,13 @@ class _HomePageState extends State<HomePage> {
         if (icon == PhosphorIconsRegular.house) return; 
         
         if (icon == PhosphorIconsRegular.magnifyingGlass) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SearchPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const SearchPage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.plus) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AddPlacePage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const AddPlacePage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bell) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const NotificationPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const NotificationPage()), (route) => false);
         } else if (icon == PhosphorIconsRegular.bookmarkSimple) {
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SavedPlacesPage()), (route) => false);
+          Navigator.pushAndRemoveUntil(context, _createSmoothRoute(const SavedPlacesPage()), (route) => false);
         }
       },
       child: AnimatedScale(
@@ -231,9 +256,10 @@ class _HomePageState extends State<HomePage> {
   Widget _buildSpotCard(Map<String, String> spot) {
     return GestureDetector(
       onTap: () {
+        // SAMAKAN PERSIS: Masuk ke halaman detail sekarang menggunakan rute transisi mulus yang sama
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PlaceDetailPage(spot: spot)),
+          _createSmoothRoute(PlaceDetailPage(spot: spot)),
         );
       },
       child: Container(
